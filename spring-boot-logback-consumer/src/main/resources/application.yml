@@ -1,0 +1,20 @@
+server:
+  port: 8013
+  servlet:
+    context-path: /logback-consumer
+
+spring:
+  application:
+    name: logback-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #配置Nacos地址
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+

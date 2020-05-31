@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <properties>
+        <property name="LOG_HOME">logs/</property>
+<!--        <property name="fileName">${sys:appName}</property>-->
+        <property name="PID">${sys:pid}</property>
+        <property name="FILE_PATTERN">{"timeMillis":"%d","thread":"%t","threadId":"%T","traceId":"%X{X-B3-TraceId}","level":"%-5p","className":"%c{1.}.%M(%L)","message":"%m","exception":"%rEx"}%n</property>
+        <property name="CONSOLE_PATTERN">%d %style{[%t]-[%T]}{Cyan} %style{[%X{X-B3-TraceId}]}{Magenta}--%highlight{%-5p}-%c{1.}.%M(%L)-%m-%highlight{%rEx}%n</property>
+    </properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" ignoreExceptions="true">
+            <PatternLayout pattern="${CONSOLE_PATTERN}" disableAnsi="false" noConsoleNoAnsi="false"/>
+        </Console>
+        <RollingFile name="INFO_ROLLING_FILE"
+                     fileName="${LOG_HOME}/-${date:yyyy-MM-dd}-info.log"
+                     filePattern="${LOG_HOME}/${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz"
+                     ignoreExceptions="true">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+<!--            <JsonLayout compact="true" eventEol="true"/>-->
+            <PatternLayout pattern="${FILE_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="4" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <logger name="org.springframework" level="INFO"></logger>
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="INFO_ROLLING_FILE"/>
+        </Root>
+    </Loggers>
+</configuration>

@@ -1,0 +1,23 @@
+server:
+  port: 8011
+  servlet:
+    context-path: /log4j2-consumer
+
+spring:
+  application:
+    name: log4j2-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #配置Nacos地址
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  file:
+    path: logs/
+
+
